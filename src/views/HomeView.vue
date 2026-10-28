@@ -11,7 +11,7 @@
           locais, promovendo comércio justo, transparente e acessível.
         </p>
         <div class="hero-btns anim-4">
-          <RouterLink to="/comprar" class="btn-primary">🛒 Quero Comprar</RouterLink>
+          <a href="https://wa.me/244926982064?text=Ol%C3%A1%2C%20gostaria%20de%20comprar%20produtos%20na%20KantosPlace." target="_blank" rel="noopener noreferrer" class="btn-primary">🛒 Quero Comprar</a>
           <RouterLink to="/vender" class="btn-secondary">🌾 Quero Vender</RouterLink>
         </div>
       </div>
@@ -74,6 +74,9 @@
       </div>
     </section>
 
+    <!-- ── NOVOS PRODUTOS / CATÁLOGO ── -->
+    <CatalogSwiper />
+
     <!-- ── HOW IT WORKS STRIP ── -->
     <section class="how-strip">
       <p class="how-label">Processo</p>
@@ -93,7 +96,7 @@
       <h3>Faça parte da nova forma de <em>comprar e vender</em><br/>produtos agrícolas em Angola.</h3>
       <div class="cta-btns">
         <RouterLink to="/vender" class="btn-lime">🌾 Quero Vender na KantosPlace</RouterLink>
-        <RouterLink to="/comprar" class="btn-outline-white">🛒 Quero Comprar na KantosPlace</RouterLink>
+        <a href="https://wa.me/244926982064?text=Ol%C3%A1%2C%20gostaria%20de%20comprar%20produtos%20na%20KantosPlace." target="_blank" rel="noopener noreferrer" class="btn-outline-white">🛒 Quero Comprar na KantosPlace</a>
       </div>
     </section>
 
@@ -102,9 +105,37 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import SiteFooter from '@/components/SiteFooter.vue'
+import CatalogSwiper from '@/components/CatalogSwiper.vue'
 import agricultor from '@/assets/identidade/agricultor.jpg'
+
+const whatsappNumber = '244926982064'
+
+function getWhatsAppUrl() {
+  const hourFormatter = new Intl.DateTimeFormat('pt-AO', {
+    timeZone: 'Africa/Luanda',
+    hour: '2-digit',
+    hourCycle: 'h23',
+  })
+  const hourPart = hourFormatter.formatToParts(new Date()).find(part => part.type === 'hour')
+  const hour = Number(hourPart?.value || 0)
+  const greeting = hour >= 5 && hour < 12
+    ? 'Bom dia'
+    : hour >= 12 && hour < 19
+      ? 'Boa tarde'
+      : 'Boa noite'
+
+  const message = `${greeting}! Gostaria de comprar produtos na KantosPlace.`
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
+}
+
+onMounted(() => {
+  document.querySelectorAll('a[href*="wa.me/244926982064"]').forEach(link => {
+    link.setAttribute('href', getWhatsAppUrl())
+  })
+})
 
 const steps = [
   { num: '01', icon: '🔍', title: 'Escolha produtos',   desc: 'Encontre produtores, veja preços e selecione o que precisa.' },
